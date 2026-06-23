@@ -405,7 +405,7 @@ exports.zip
 
 # Étape 10 : Déduplication
 
-Garage ne fait pas nativement de déduplication de sauvegardes comme PBS.
+Garage ne fait pas nativement de déduplication de sauvegardes comme bs.
 
 Deux approches :
 

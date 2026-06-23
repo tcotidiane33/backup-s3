@@ -209,12 +209,58 @@
                 opacity: 1;
             }
         }
+
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 2rem;
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-bar a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-bar a:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-bar a.active {
+            color: #60a5fa;
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .nav-bar .brand-text {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-main);
+        }
     </style>
 </head>
 
 <body>
     <div class="background-blob"></div>
     <div class="background-blob right"></div>
+
+    <div class="nav-bar">
+        <span class="brand-text">DocuVault SaaS</span>
+        <div>
+            <a href="/" class="active">📊 Dashboard</a>
+            <a href="/bs">🛡️ Kondro Backup</a>
+        </div>
+    </div>
 
     <div class="container">
         <header>

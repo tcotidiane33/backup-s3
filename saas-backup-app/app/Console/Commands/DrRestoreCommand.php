@@ -65,6 +65,6 @@ class DrRestoreCommand extends Command
         $this->info("Cleaning up restore footprint...");
         File::deleteDirectory($restoreTarget);
 
-        $this->info("PBS-like Disaster Recovery Complete!");
+        $this->info("bs-like Disaster Recovery Complete!");
     }
 }

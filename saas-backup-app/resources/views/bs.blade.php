@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proxmox Backup Server - Datastore</title>
+    <title>Kondro Backup Server - Datastore</title>
     <style>
         :root {
             --bg-dark: #121212;
@@ -217,7 +217,7 @@
     <div class="sidebar">
         <div class="brand">
             <div class="brand-logo"></div>
-            Proxmox Backup
+            Kondro Backup
         </div>
         <div class="nav-item active" onclick="switchTab('datastore')">Datastore s3-garage</div>
         <div class="nav-item" onclick="switchTab('config')">Datastore Configuration</div>
@@ -336,7 +336,7 @@
         }
 
         async function loadConfig() {
-            const data = await api('/pbs/api/env');
+            const data = await api('/bs/api/env');
             const form = document.getElementById('config-form');
             if (data) {
                 ['AWS_ENDPOINT', 'AWS_BUCKET', 'AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY'].forEach(k => {
@@ -356,14 +356,14 @@
                 RESTIC_PASSWORD: form.elements.RESTIC_PASSWORD.value
             };
             logMsg("Saving environment configuration...");
-            const res = await api('/pbs/api/env/save', 'POST', body);
+            const res = await api('/bs/api/env/save', 'POST', body);
             if (res.success) logMsg("Configuration saved natively! You can now access Garage parameters dynamically.", false);
         }
 
         async function loadSnapshots() {
             const tbody = document.querySelector('#snapshots-table tbody');
             tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Querying Garage Server...</td></tr>';
-            const res = await api('/pbs/api/restic/list');
+            const res = await api('/bs/api/restic/list');
 
             if (!res.success || !res.snapshots) {
                 tbody.innerHTML = `<tr><td colspan="4" style="color:#f44336;">Error: ${res.error || 'Repository uninitialized or connection refused.'}</td></tr>`;
@@ -395,7 +395,7 @@
         async function initDatastore() {
             if (!confirm("Initialize the S3 block datastore?")) return;
             logMsg("Running restic init over S3...");
-            const res = await api('/pbs/api/restic/init', 'POST');
+            const res = await api('/bs/api/restic/init', 'POST');
             logMsg(res.stdout || res.stderr);
             if (res.stderr && res.stderr.includes("already initialized")) logMsg("Repository is already securely formatted.");
             loadSnapshots();
@@ -403,7 +403,7 @@
 
         async function takeSnapshot() {
             logMsg("Executing atomic SQLite dump & Restic deduplication pass...");
-            const res = await api('/pbs/api/restic/snapshot', 'POST');
+            const res = await api('/bs/api/restic/snapshot', 'POST');
             logMsg(res.stdout);
             if (res.stderr) logMsg(res.stderr, true);
             loadSnapshots();
@@ -412,9 +412,9 @@
         async function restoreSnapshot(id) {
             if (!confirm(`WARNING: Datastore logic will eradicate the current active application and replace it sequentially with Snapshot ${id}. Proceed with Disaster Recovery?`)) return;
             logMsg(`Restoring snapshot [${id}]. Do not close...`);
-            const res = await api('/pbs/api/restic/restore', 'POST', { id });
+            const res = await api('/bs/api/restic/restore', 'POST', { id });
             if (res.success) {
-                logMsg(`Restore sequence [${id}] perfectly aligned via PBS Controller!`);
+                logMsg(`Restore sequence [${id}] perfectly aligned via bs Controller!`);
                 if (res.output.stdout) logMsg(res.output.stdout);
             } else {
                 logMsg(`Restore failed: ${res.error}`, true);
